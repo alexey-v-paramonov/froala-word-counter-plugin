@@ -39,7 +39,7 @@
 
             // replaces unviewable tags with a text representation
             s = s.replace('[*]', '');
-            s = s.replace(/\[(attach|media|img|spoiler|ispoiler)[^]\]*?].*?\[\/\1\]/si, '',);
+            s = s.replace(/\[(attach|media|img|spoiler|ispoiler)[^]\]*?].*?\[\/\1\]/si, '');
 
             // split the string into possible delimiters and text; even keys (from 0) are strings, odd are delimiters
             parts = s.split(/(\[[a-z0-9_]+(?:=[^]\]*){0,1}?]|\[[a-z0-9_]+(?:s?[a-z0-9_]+="[^"]*")+\]|\[\/[a-z0-9_]+\])/si);
@@ -117,6 +117,9 @@
             var text = editor.el.innerText || "";
 
             text = stripBbCode(text);
+            text = text.replace(/\{(slide)(?:=){0,1}?([^\|}]*)([^\}]*)\}(.*)\{\/slide\}/si, '[\\1] \\2');
+            text = text.replace(/\{(td|tr|th|thead|tbody|tfoot|colgroup|col|caption)(?:=){0,1}?(?:[^\}]*)\}(.*)\{\/\\1\}/si, '\\2 ');
+
             text = text.replace(/\s+/gi, " ");
             text = text.trim();
             return text.length ? text.split(' ').length : 0;
