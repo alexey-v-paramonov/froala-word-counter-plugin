@@ -14,10 +14,9 @@
 
         function countWords() {
             var text = editor.el.innerText || "";
-            text = text.replace(/\n/g, " ");
-	        text = text.replace(/(^\s*)|(\s*$)/gi,"");
-	        text = text.replace(/[ ]{2,}/gi," ");
-            return text.split(' ').length;
+            text = text.replace(/\s+/gi, " ");
+            text = text.trim();
+            return text.length ? text.split(' ').length : 0;
         }
 
         function updateCounter() {
@@ -43,7 +42,7 @@
                     editor.events.trigger("charCounter.update");
                     void editor.events.on("destroy", function() {
                         $(editor.o_win).off("resize.char" + editor.id);
-                        counuter.removeData().remove();
+                        counter.removeData().remove();
                         counter = null
                     });
                 }
