@@ -131,7 +131,7 @@
                 counter.text(text);
                 editor.opts.toolbarBottom && counter.css("margin-bottom", editor.$tb.outerHeight(!0));
                 var t = editor.$wp.get(0).offsetWidth - editor.$wp.get(0).clientWidth;
-                0 <= t && ("rtl" == editor.opts.direction ? counter.css("margin-left", t) : counter.css("margin-right", t))
+                0 <= t && ("rtl" === editor.opts.direction ? counter.css("margin-left", t) : counter.css("margin-right", t))
             }
         }
         return {
@@ -141,10 +141,9 @@
 
                     editor.$box.append(counter);
                     editor.events.on("paste.afterCleanup", updateCounter);
-                    editor.events.on("keyup contentChanged input", function() {
-                        editor.events.trigger("charCounter.update")
-                    });
+                    editor.events.on("contentChanged", updateCounter);
                     editor.events.on("charCounter.update", updateCounter);
+                    editor.events.on("html.set", updateCounter);
                     editor.events.trigger("charCounter.update");
                     editor.events.on("destroy", function() {
                         $(editor.o_win).off("resize.char" + editor.id);
