@@ -12,6 +12,7 @@
     $.FE.PLUGINS.xfSvWordCounter = function(editor) {
         var counter;
         var timeout;
+        var timeoutInterval = 0;
 
         function stripBbCode(text) {
             var parts = text.split(/(\[quote[^\]]*\]|\[\/quote\])/i);
@@ -131,7 +132,10 @@
                 timeout = setTimeout(function(){
                     timeout = null;
                     updateCounter();
-                }, 1000);
+                }, timeoutInterval);
+                if (!timeoutInterval)  {
+                    timeoutInterval = 5000;
+                }
             }
         }
 
