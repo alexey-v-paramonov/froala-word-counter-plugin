@@ -128,7 +128,10 @@
 
         function updateCounterDelay() {
             if (editor.opts.xfSvWordCounter && !timeout) {
-                timeout = setTimeout(updateCounter, 1000);
+                timeout = setTimeout(function(){
+                    timeout = null;
+                    updateCounter();
+                }, 1000);
             }
         }
 
