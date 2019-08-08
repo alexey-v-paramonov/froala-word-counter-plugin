@@ -134,7 +134,7 @@
                     updateCounter();
                 }, timeoutInterval);
                 if (timeoutInterval === null)  {
-                    timeoutInterval = 5000;
+                    timeoutInterval = 1000;
                 }
             }
         }
