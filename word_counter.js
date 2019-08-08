@@ -12,7 +12,7 @@
     $.FE.PLUGINS.xfSvWordCounter = function(editor) {
         var counter;
         var timeout;
-        var timeoutInterval = 0;
+        var timeoutInterval = null;
 
         function stripBbCode(text) {
             var parts = text.split(/(\[quote[^\]]*\]|\[\/quote\])/i);
@@ -133,7 +133,7 @@
                     timeout = null;
                     updateCounter();
                 }, timeoutInterval);
-                if (!timeoutInterval)  {
+                if (timeoutInterval === null)  {
                     timeoutInterval = 5000;
                 }
             }
@@ -151,6 +151,11 @@
             _init: function() {
                 if(!!editor.opts.xfSvWordCounter && !!editor.$wp){
                     counter = $('<span class="fr-word-counter"></span>').css("bottom", editor.$wp.css("border-bottom-width"));
+
+                    timeoutInterval = editor.opts.xfSvWordCounterTimeout || null;
+                    if (timeoutInterval < 0) {
+                        timeoutInterval = 0;
+                    }
 
                     editor.$box.append(counter);
                     editor.events.on("paste.afterCleanup", updateCounterDelay);
