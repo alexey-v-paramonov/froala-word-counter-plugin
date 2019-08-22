@@ -44,7 +44,7 @@
             s = s.replace(/\[(attach|media|img|spoiler|ispoiler)[^]\]*?].*?\[\/\1\]/i, '');
 
             // split the string into possible delimiters and text; even keys (from 0) are strings, odd are delimiters
-            parts = s.split(/(\[[a-z0-9_]+(?:=[^]\]*){0,1}?]|\[[a-z0-9_]+(?:s?[a-z0-9_]+="[^"]*")+\]|\[\/[a-z0-9_]+\])/i);
+            parts = s.split(/(\[[a-z0-9_]+(?:=[^\]]*){0,1}?\]|\[[a-z0-9_]+(?:\s?[a-z0-9_]+="[^"]*")+\]|\[\/[a-z0-9_]+\])/i);
             if (parts.length < 2) {
                 return s;
             }
@@ -88,7 +88,7 @@
                     continue;
                 }
 
-                match = part.match(/^\[([a-z0-9_]+)(?:=|s?[a-z0-9_]+="[^"]*"|\])/i);
+                match = part.match(/^\[([a-z0-9_]+)(?:=|\s?[a-z0-9_]+="[^"]*"|\])/i);
                 if (match)
                 {
                     var tagName = match[1].toLowerCase();
