@@ -33,7 +33,7 @@
                 if(!!editor.opts.wordCounter && !!editor.$wp){
                     counter = $('<span class="fr-counter"></span>').css("bottom", editor.$wp.css("border-bottom-width"));
 
-                    $(editor.$box).append(counter);
+                    $(editor.$box).after(counter);
                     editor.events.on("paste.afterCleanup", updateCounter);
                     editor.events.on("keyup contentChanged input", function() {
                         editor.events.trigger("charCounter.update")
