@@ -157,7 +157,7 @@
                         timeoutInterval = 0;
                     }
 
-                    editor.$box.append(counter);
+                    $(editor.$box).after(counter);
                     editor.events.on("paste.afterCleanup", updateCounterDelay);
                     editor.events.on("contentChanged", updateCounterDelay);
                     editor.events.on("charCounter.update", updateCounterDelay);
