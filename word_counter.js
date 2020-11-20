@@ -124,7 +124,11 @@
 
             text = text.replace(/\s+/gi, " ");
             text = text.trim();
-            return text.length ? text.split(' ').length : 0;
+            if (!text.length) {
+                return 0;
+            }
+            var fragments = text.split(/[^\p{L}\p{N}']+/u).filter(function(el) {return el.length !== 0});
+            return fragments.length;
         }
 
         function updateCounterDelay() {
