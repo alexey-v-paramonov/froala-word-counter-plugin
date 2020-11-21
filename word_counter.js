@@ -13,6 +13,7 @@
         var counter;
         var timeout;
         var timeoutInterval = null;
+        var wordCountRegex = null;
 
         function stripBbCode(text) {
             var parts = text.split(/(\[quote[^\]]*\]|\[\/quote\])/i);
@@ -116,18 +117,24 @@
         }
 
         function countWords() {
+            var fragments;
             var text = editor.el.innerText || "";
 
             text = stripBbCode(text);
             text = text.replace(/\{(slide)(?:=){0,1}?([^\|}]*)([^\}]*)\}(.*)\{\/slide\}/i, '[\\1] \\2');
             text = text.replace(/\{(td|tr|th|thead|tbody|tfoot|colgroup|col|caption)(?:=){0,1}?(?:[^\}]*)\}(.*)\{\/\\1\}/i, '\\2 ');
 
-            text = text.replace(/\s+/gi, " ");
-            text = text.trim();
-            if (!text.length) {
-                return 0;
+            if (wordCountRegex) {
+                fragments = text.split(wordCountRegex);
+                fragments = fragments.filter(function (el) {
+                    return el.length !== 0
+                });
+            } else {
+                text = text.replace(/\s+/gi, " ");
+                text = text.trim();
+                fragments = text.split(' ');
             }
-            var fragments = text.split(/[^\p{L}\p{N}']+/u).filter(function(el) {return el.length !== 0});
+
             return fragments.length;
         }
 
@@ -154,6 +161,19 @@
         return {
             _init: function() {
                 if(!!editor.opts.xfSvWordCounter && !!editor.$wp){
+                    // regex unicode feature detection
+                    try {
+                        wordCountRegex = new RegExp('[^\\p{L}\\p{N}\']+', 'u');
+                        var count = 0;
+                        if ('unicode' in wordCountRegex && wordCountRegex.unicode) {
+                            count = '1 1'.split(wordCountRegex).length;
+                        }
+                        if (count !== 2) {
+                            wordCountRegex = null;
+                        }
+                    } catch (err) {
+                        wordCountRegex = null;
+                    }
                     counter = $('<span class="fr-word-counter"></span>').css("bottom", editor.$wp.css("border-bottom-width"));
 
                     timeoutInterval = editor.opts.xfSvWordCounterTimeout || null;
