@@ -6,10 +6,10 @@
 
 (function ($) {
     $.extend($.FE.DEFAULTS, {
-        xfSvWordCounter: false,
+        wordCounter: false,
     });
 
-    $.FE.PLUGINS.xfSvWordCounter = function(editor) {
+    $.FE.PLUGINS.wordCounter = function(editor) {
         var counter;
         var timeout;
         var timeoutInterval = null;
@@ -139,19 +139,16 @@
         }
 
         function updateCounterDelay() {
-            if (editor.opts.xfSvWordCounter && !timeout) {
+            if (!timeout) {
                 timeout = setTimeout(function(){
                     timeout = null;
                     updateCounter();
                 }, timeoutInterval);
-                if (timeoutInterval === null)  {
-                    timeoutInterval = 1000;
-                }
             }
         }
 
         function updateCounter() {
-            var text = countWords() + " " + (editor.opts.xfSvWordCounterLabel || "words");
+            var text = countWords() + " " + (editor.opts.wordCounterLabel || "words");
             counter.text(text);
             editor.opts.toolbarBottom && counter.css("margin-bottom", editor.$tb.outerHeight(!0));
             var t = editor.$wp.get(0).offsetWidth - editor.$wp.get(0).clientWidth;
@@ -160,7 +157,7 @@
 
         return {
             _init: function() {
-                if(!!editor.opts.xfSvWordCounter && !!editor.$wp){
+                if(!!editor.opts.wordCounter && !!editor.$wp){
                     // regex unicode feature detection
                     try {
                         wordCountRegex = new RegExp('[^\\p{L}\\p{N}\']+', 'u');
@@ -176,8 +173,8 @@
                     }
                     counter = $('<span class="fr-word-counter"></span>').css("bottom", editor.$wp.css("border-bottom-width"));
 
-                    timeoutInterval = editor.opts.xfSvWordCounterTimeout || null;
-                    if (timeoutInterval < 0) {
+                    timeoutInterval = editor.opts.wordCounterTimeout || 0;
+                    if (timeoutInterval <= null) {
                         timeoutInterval = 0;
                     }
 
