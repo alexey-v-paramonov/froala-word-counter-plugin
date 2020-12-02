@@ -12,6 +12,8 @@
     $.FE.PLUGINS.wordCounter = function(editor) {
         var counter;
         var timeout;
+        var wordLabel;
+        var skipBbCode = false;
         var timeoutInterval = null;
         var wordCountRegex = null;
 
@@ -120,9 +122,11 @@
             var fragments;
             var text = editor.el.innerText || "";
 
-            text = stripBbCode(text);
-            text = text.replace(/\{(slide)(?:=){0,1}?([^\|}]*)([^\}]*)\}(.*)\{\/slide\}/i, '[\\1] \\2');
-            text = text.replace(/\{(td|tr|th|thead|tbody|tfoot|colgroup|col|caption)(?:=){0,1}?(?:[^\}]*)\}(.*)\{\/\\1\}/i, '\\2 ');
+            if (skipBbCode) {
+                text = stripBbCode(text);
+                text = text.replace(/\{(slide)(?:=){0,1}?([^\|}]*)([^\}]*)\}(.*)\{\/slide\}/i, '[\\1] \\2');
+                text = text.replace(/\{(td|tr|th|thead|tbody|tfoot|colgroup|col|caption)(?:=){0,1}?(?:[^\}]*)\}(.*)\{\/\\1\}/i, '\\2 ');
+            }
 
             if (wordCountRegex) {
                 fragments = text.split(wordCountRegex);
@@ -148,7 +152,7 @@
         }
 
         function updateCounter() {
-            var text = countWords() + " " + (editor.opts.wordCounterLabel || "words");
+            var text = countWords() + " " + wordLabel;
             counter.text(text);
             editor.opts.toolbarBottom && counter.css("margin-bottom", editor.$tb.outerHeight(!0));
             var t = editor.$wp.get(0).offsetWidth - editor.$wp.get(0).clientWidth;
@@ -173,8 +177,10 @@
                     }
                     counter = $('<span class="fr-word-counter"></span>').css("bottom", editor.$wp.css("border-bottom-width"));
 
+                    wordLabel = editor.opts.wordCounterLabel || "words";
+                    skipBbCode = editor.opts.wordCounterBbCode || false;
                     timeoutInterval = editor.opts.wordCounterTimeout || 0;
-                    if (timeoutInterval <= null) {
+                    if (timeoutInterval <= 0) {
                         timeoutInterval = 0;
                     }
 
