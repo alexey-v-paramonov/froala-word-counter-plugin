@@ -143,7 +143,7 @@
         }
 
         function updateCounterDelay() {
-            if (!timeout) {
+            if (editor.opts.wordCounter && !timeout) {
                 timeout = setTimeout(function(){
                     timeout = null;
                     updateCounter();
