@@ -4,12 +4,13 @@
  * Copyright 2014-2018 Froala Labs
  */
 
-(function ($) {
-    $.extend($.FE.DEFAULTS, {
-        wordCounter: false,
-    });
+(function (FroalaEditor) {
+    FroalaEditor;
+    FroalaEditor.DEFAULTS = Object.assign(FroalaEditor.DEFAULTS, {
+        wordCounter: false
+      });
 
-    $.FE.PLUGINS.wordCounter = function(editor) {
+      FroalaEditor.PLUGINS.wordCounter = function(editor) {
         var counter;
         var timeout;
         var wordLabel;
@@ -152,7 +153,7 @@
         }
 
         function updateCounter() {
-            var text = countWords() + " " + wordLabel;
+            var text = wordLabel+": "+countWords();
             counter.text(text);
             editor.opts.toolbarBottom && counter.css("margin-bottom", editor.$tb.outerHeight(!0));
             var t = editor.$wp.get(0).offsetWidth - editor.$wp.get(0).clientWidth;
@@ -175,7 +176,7 @@
                     } catch (err) {
                         wordCountRegex = null;
                     }
-                    counter = $('<span class="fr-word-counter"></span>').css("bottom", editor.$wp.css("border-bottom-width"));
+                    counter = $('<span class="fr-counter fr-word-counter" style="bottom: 1px; margin-right: 2px;">Words: <span class="worddrww">0</span></span>');
 
                     wordLabel = editor.opts.wordCounterLabel || "words";
                     skipBbCode = editor.opts.wordCounterBbCode || false;
@@ -184,7 +185,8 @@
                         timeoutInterval = 0;
                     }
 
-                    $(editor.$box).after(counter);
+                    $(".fr-second-toolbar").append(counter);
+                    
                     editor.events.on("paste.afterCleanup", updateCounterDelay);
                     editor.events.on("contentChanged", updateCounterDelay);
                     editor.events.on("charCounter.update", updateCounterDelay);
@@ -203,5 +205,9 @@
             },
             count: countWords
         }
-    }
-})(jQuery);
+            return {
+                _init: _init,
+                publicMethod: publicMethod
+              }
+            }
+          })(FroalaEditor);
